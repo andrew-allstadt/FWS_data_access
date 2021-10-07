@@ -22,11 +22,11 @@ def get_tribal_information(url="https://www.bia.gov/tribal-leaders-json"):
 def get_bia_regions(url="https://www.bia.gov/sites/bia.gov/files/assets/mapfiles/IARegionPolygonGeo.json",
                     as_esri_sdf=False):
     """
-    Retrieve Bureau of Indian Affairs regions as a spatial dataframe, or optionally a feature set. See
+    Retrieve Bureau of Indian Affairs regions as a spatial data frame, or optionally a feature set. See
     https://www.bia.gov/tribal-leaders-directory for more information about the data, and either geopandas package or
     https://developers.arcgis.com/python/api-reference/ for more on the format.
     :param url: url to endpoint, typically leave as default
-    :param as_esri_sdf: if False, returns Geopandas data frame. If true, returns an ESRI geoaccessor pd.
+    :param as_esri_sdf: if False, returns geopandas data frame. If true, returns an ESRI geoaccessor pd.
     :return: Pandas/ArcGIS GeoAccessor spatial data frame, or an ArcGIS feature set
     """
 
