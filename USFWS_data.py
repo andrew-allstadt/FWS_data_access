@@ -3,12 +3,6 @@ import pandas as pd
 import geopandas
 import matplotlib.pyplot as plt
 
-# Optionally, if present, load ArcGIS Online module
-try_load = util.find_spec("arcgis")
-if try_load is not None and try_load.name == "arcgis":
-    import arcgis
-    arcgis_loaded = True
-
 
 def get_cmt_main_table(legacy_regions=None, as_geopandas=False, url="https://systems.fws.gov/cmt/getCMTBasic.do?REGION="):
     """
@@ -39,8 +33,8 @@ def get_cmt_main_table(legacy_regions=None, as_geopandas=False, url="https://sys
 
     # If necessary turn to geopandas, and either way return
     if as_geopandas:
-        geo_cmt = geopandas.GeoDataFrame(cmt, geometry=geopandas.points_from_xy(cmt.LONG, cmt.LAT))\
-            .set_crs("EPSG:4326")
+        geo_cmt = geopandas.GeoDataFrame(cmt, geometry=geopandas.points_from_xy(cmt.LONG, cmt.LAT),
+                                         crs="EPSG:4326")
         return geo_cmt
     else:
         return cmt
@@ -48,6 +42,6 @@ def get_cmt_main_table(legacy_regions=None, as_geopandas=False, url="https://sys
 
 def plot_cmt(legacy_regions=None):
     world = geopandas.read_file(geopandas.datasets.get_path('naturalearth_lowres'))
-    geo_cmt = get_cmt_main_table(legacy_regions=legacy_regions, as_geopandas=True)
+    geo_cmt = get_cmt_main_table(legacy_regions=None, as_geopandas=True)
     ax = world.plot(color='white', edgecolor='black')
     geo_cmt.plot(ax=ax, color="red")
