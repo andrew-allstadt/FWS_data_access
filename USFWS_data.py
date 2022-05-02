@@ -2,6 +2,7 @@ from importlib import util
 import pandas as pd
 import geopandas
 import matplotlib.pyplot as plt
+import requests
 
 
 def get_cmt_main_table(legacy_regions=None, as_geopandas=False, url="https://systems.fws.gov/cmt/getCMTBasic.do?REGION="):
@@ -45,3 +46,15 @@ def plot_cmt(legacy_regions=None):
     geo_cmt = get_cmt_main_table(legacy_regions=None, as_geopandas=True)
     ax = world.plot(color='white', edgecolor='black')
     geo_cmt.plot(ax=ax, color="red")
+
+
+# Function to look up FWS Taxon code
+def get_fws_taxon_code(sci_name, url="https://ecos.fws.gov/ServCatServices/v2/rest/taxonomy/searchByScientificName/"):
+    print(sci_name)
+    sci_name_ = sci_name.replace(" spp.", "").replace(" ", "%20")
+    result = requests.get(url+sci_name_+"?format=JSON")
+    sci_names = {x['ScientificName']: x['TaxonCode'] for x in result.json()}
+    if sci_name in sci_names.keys():
+        return sci_names[sci_name]
+    else:
+        return None
