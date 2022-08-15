@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import requests
 
 
-def get_cmt_main_table(legacy_regions=None, as_geopandas=False, url="https://systems.fws.gov/cmt/getCMTBasic.do?REGION="):
+def get_cmt_main_table(legacy_regions=None, as_geopandas=False,
+                       url="https://systems.fws.gov/cmt/getCMTBasic.do?REGION="):
     """
     Return the main USFWS Corporate Master Table
     or as a geopandas
