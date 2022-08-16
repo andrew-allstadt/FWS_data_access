@@ -11,6 +11,7 @@ import logging
 import re
 import pandas as pd
 from numpy import isnan
+from requests.utils import requote_uri
 
 # Create logger.
 logger = logging.getLogger('fwsTaxonomy')
@@ -37,8 +38,15 @@ class fwsTaxonomy:
 
         # Constants for use in this class
         self.baseURL = 'https://ecos.fws.gov/ServCatServices/v2/rest/taxonomy/'
-        self.implementedServices = ['searchByScientificName']
-        self.allServices = ['searchByScientificName']
+
+        # Implemented services
+        self.implementedServices = ['searchByScientificName', 'searchByCodes']
+
+        # List of all services in FWSpecies
+        self.allServices = ['searchByScientificName', 'searchByCodes']
+
+        # Services that end in "&format=JSON" rather than "?format=JSON"
+        self.json_extension = ['searchByCodes']
 
         # Test we can connect with simple query from example document
         logger.info('Initiating contact with FWS Taxonomy...')
@@ -93,7 +101,7 @@ class fwsTaxonomy:
             taxoncodes[i] = int(taxoncodes[i])
             taxoncodes[i] = str(taxoncodes[i])
 
-        query = "taxoncode?codes=" + ",".join(taxoncodes) + "&format=JSON"
+        query = "taxoncode?codes=" + ",".join(taxoncodes)
 
         # Perform query
         # TODO: Bring back for some basic processing before returning.
@@ -114,7 +122,13 @@ class fwsTaxonomy:
                                           " this package.")
             else:
                 raise ValueError("Function: is not part of FWS Taxonomy web services. Please check your input.")
-        return self.baseURL + function_name + "/" + requests.utils.quote(query) + "?format=JSON"
+
+        json_extension = "?format=JSON"
+        if function_name in self.json_extension:
+            json_extension = "&format=JSON"
+
+        # print(self.baseURL + function_name + "/" + requests.utils.requote_uri(query) + json_extension)
+        return self.baseURL + function_name + "/" + requests.utils.requote_uri(query) + json_extension
 
     def _call_taxon(self, function, query):
         url = self._construct_call(function, query)
