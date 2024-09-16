@@ -6,7 +6,8 @@ import requests
 
 
 def get_cmt_main_table(legacy_regions=None, as_geopandas=False,
-                       url="https://systems.fws.gov/cmt/getCMTBasic.do?REGION="):
+                       url="https://systems.fws.gov/cmt/getCMTBasic.do?REGION=",
+                       encoding_errors='strict'):
     """
     Return the main USFWS Corporate Master Table
     or as a geopandas
@@ -15,6 +16,7 @@ def get_cmt_main_table(legacy_regions=None, as_geopandas=False,
     :param legacy_regions: A list or set of integer USFWS legacy region #s, valid in [0,9]
     :param as_geopandas: Returns same information, but as geopandas data frame with points set to lat/long
     :param url: url to endpoint, typically leave as default
+    :param encoding_errors: CMT often has encoding errors in it. Change to ignore if function won't run.
     :return:
     """
     # Check regions parameter
@@ -31,7 +33,7 @@ def get_cmt_main_table(legacy_regions=None, as_geopandas=False,
 
     # Create and perform query
     region_text = ",".join([str(x) for x in regions_])
-    cmt = pd.read_json(url + region_text)
+    cmt = pd.read_json(url + region_text, encoding_errors)
 
     # If necessary turn to geopandas, and either way return
     if as_geopandas:
